@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>uTorrent Monitor Configuration</title>
+
+
+</head>
+
+<body>
+
+<div id="uTorrentMonitorConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage">
+<div data-role="content">
+<div class="content-primary">
+<form id="uTorrentMonitorConfigurationForm">
+  <ul class="ulForm" data-role="listview">
+
+    <li> <label for="txtIPAddress">uTorrentIPAddress:</label>
+      <table style="width: 168px; height: 30px;" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td style="width: 20px;"> <input id="inp1" name="inp1" maxlength="3"></input></td>
+            <td style="width: 5px;">.</td>
+            <td style="width: 20px;"> <input id="inp2" name="inp2" maxlength="3"></input></td>
+            <td style="width: 5px;">.</td>
+            <td style="width: 20px;"> <input id="inp3" name="inp3"  maxlength="3"></input></td>
+            <td style="width: 5px;">.</td>
+            <td style="width: 20px;"> <input id="inp4" name="inp4" maxlength="3"></input></td>
+          </tr>
+        </tbody>
+      </table>
+    </li>
+    <li>
+
+     
+        <table style="width: 220px;">
+          <tbody>
+            <tr>
+              <td style="width: 200px;">
+                <label for="uTorrentPort">uTorrent Port:</label>
+              </td>
+              <td style="width: 60px;">
+                <input id="uTorrentPort" name="uTorrentPort" maxlength="4" ></input>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+ 
+    </li>
+   
+    <li> <label for="Username">uTorrent Username:</label>
+      <input id="Username" name="Username"></input> </li>
+    <li> <label for="Password">uTorrent Password:</label>
+      <input id="Password" name="Password"></input> </li>
+    <li>
+      <label for="SeedingRemove">Remove Seeding Torrents</label>
+      <input id="SeedingRemove" name="SeedingRemove" type="CheckBox"></input>
+    </li>
+    <li>
+      <div style="text-align: center; font-weight: bold; text-decoration: underline;"><label for="uTorrentStatus">uTorrent Status</label></div>
+      <table id="uTorrentStatusDataTable" style="width: 944px height: 30px;" border="1" cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="width: 200px; text-align: Center; font-weight: bold; text-decoration: underline;">Name</td>
+            <td style="width: 200px; text-align: Center; font-weight: bold; text-decoration: underline;">Status</td>
+            <td style="width: 200px; text-align: Center; font-weight: bold; text-decoration: underline;">Download Rate</td>
+            <td style="width: 200px; text-align: Center; font-weight: bold; text-decoration: underline;">Upload Rate</td>          
+          </tr>
+        </tbody>
+      </table>
+    </li>
+    <li>
+      <button type="submit" data-theme="b">Save</button>
+      <button type="button" onclick="history.back();">Cancel</button>
+    </li>
+  </ul>
+</form>
+</div>
+</div>
+
+<script type="text/javascript">
+  var uTorrentMonitorConfigurationPage = {
+  pluginUniqueId: "5a3f8ee9-bfb5-4274-9e3d-45aa5aff33aa",
+  selectDirectory: function () {
+  Dashboard.selectDirectory({
+  callback: function (path)
+  {
+  if (path)
+  {
+  $('#txtDownloadPath', $.mobile.activePage).val(path);
+  }
+  $('#popupDirectoryPicker', $.mobile.activePage).popup("close");
+  },
+  header: "Select Path"
+  });
+  }
+  };
+  $('#uTorrentMonitorConfigurationPage').on('pageshow', function (event)
+  {
+  Dashboard.showLoadingMsg();
+  var page = this;
+  ApiClient.getPluginConfiguration(uTorrentMonitorConfigurationPage.pluginUniqueId).done(function (config) {
+  $('#inp1', page).val(config.inp1);
+  $('#inp2', page).val(config.inp2);
+  $('#inp3', page).val(config.inp3);
+  $('#inp4', page).val(config.inp4);
+  $('#uTorrentPort', page).val(config.uTorrentPort);
+  $('#SeedingRemove', page).checked(config.SeedingRemove).checkboxradio("refresh");
+  $('#Username', page).val(config.Username);
+  $('#Password', page).val(config.Password);
+  Dashboard.hideLoadingMsg();
+  });
+  });
+
+
+
+  $('#uTorrentMonitorConfigurationForm').on('submit', function (e) {
+  Dashboard.showLoadingMsg();
+  var form = this;
+  ApiClient.getPluginConfiguration(uTorrentMonitorConfigurationPage.pluginUniqueId).done(function (config)
+  {
+  config.inp1 = $('#inp1', form).val();
+  config.inp2 = $('#inp2', form).val();
+  config.inp3 = $('#inp3', form).val();
+  config.inp4 = $('#inp4', form).val();
+  config.uTorrentPort = $('#uTorrentPort', form).val();
+  config.SeedingRemove = $('#SeedingRemove', form).checked();
+  config.Username = $('#Username',form).val();
+  config.Password = $('#Password',form).val();
+  ApiClient.updatePluginConfiguration(uTorrentMonitorConfigurationPage.pluginUniqueId, config).done(Dashboard.processPluginConfigurationUpdateResult);
+  Apiclient.UpdateScheduledTaskTriggers
+  });
+  // Disable default form submission
+  return false;
+  });
+</script>
+<TITLE> Add/Remove dynamic rows in HTML table </TITLE>
+  
+</div>
+
+</body>
+</html>
